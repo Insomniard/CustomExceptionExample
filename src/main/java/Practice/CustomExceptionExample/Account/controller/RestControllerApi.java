@@ -30,4 +30,14 @@ public class RestControllerApi {
         return memberService.findAll();
     }
 
+    @GetMapping("/agree")
+    public Object agreeTestApi()throws Exception{
+        return memberService.agreetest();
+    }
+
+    @GetMapping("/")
+    public Object denyTestApi()throws Exception{
+        return memberService.denytest();
+    }
+
 }
