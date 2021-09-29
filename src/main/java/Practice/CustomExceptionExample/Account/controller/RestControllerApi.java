@@ -1,18 +1,14 @@
 package Practice.CustomExceptionExample.Account.controller;
 
-import Practice.CustomExceptionExample.Account.dto.MemberDto;
-import Practice.CustomExceptionExample.Account.dto.MemberJoinDto;
 import Practice.CustomExceptionExample.Account.entity.Member;
 import Practice.CustomExceptionExample.Account.repository.MemberRepository;
 import Practice.CustomExceptionExample.Account.service.MemberService;
 import Practice.CustomExceptionExample.Account.util.TokenProvider;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -28,8 +24,8 @@ public class RestControllerApi {
     @PostMapping("/join")
     public Long join(@RequestBody Map<String, String> member) {
         return memberRepository.save(Member.builder()
-                .memberEmail(member.get("email"))
-                .memberPassword(passwordEncoder.encode(member.get("password")))
+                .email(member.get("email"))
+                .password(passwordEncoder.encode(member.get("password")))
                 .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
                 .build()).getId();
     }
