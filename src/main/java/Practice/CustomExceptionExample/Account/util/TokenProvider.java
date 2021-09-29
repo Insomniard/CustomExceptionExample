@@ -5,17 +5,14 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class TokenProvider {
+
+    @Value("spring.jwt.secret")
     private String key;
     private long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;
     private final UserDetailsService userDetailsService;
