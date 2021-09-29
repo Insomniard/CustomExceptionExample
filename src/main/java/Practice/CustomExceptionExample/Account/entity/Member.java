@@ -1,9 +1,6 @@
 package Practice.CustomExceptionExample.Account.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +16,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Entity
 @Builder
+@Setter
 public class Member implements UserDetails {
 
     @Id
@@ -26,30 +24,20 @@ public class Member implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String memberIds;
+    private String ids;
 
     @Column(nullable = false)
-    private String memberName;
+    private String name;
 
     @Column(nullable = false)
-    private String memberEmail;
+    private String email;
 
     @Column(nullable = false)
-    private String memberPassword;
+    private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
-
-
-    public Member(Long id, String memberId, String memberName, String memberEmail, String memberPassword) {
-        this.id =  id;
-        this.memberIds = memberId;
-        this.memberName = memberName;
-        this.memberEmail = memberEmail;
-        this.memberPassword = memberPassword;
-    }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,13 +47,8 @@ public class Member implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return memberPassword;
-    }
-
-    @Override
     public String getUsername() {
-        return memberEmail;
+        return email;
     }
 
     @Override
