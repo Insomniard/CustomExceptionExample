@@ -1,26 +1,47 @@
 package Practice.CustomExceptionExample.Account.util;
 
-import org.springframework.http.HttpMethod;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@RequiredArgsConstructor
+@EnableWebSecurity
 public class config extends WebSecurityConfigurerAdapter {
+
+    private final TokenProvider tokenprovider;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
 
     @Override
     protected void configure(HttpSecurity security) throws Exception{
-        security.cors().and()
+        security
+                .httpBasic().disable()
                 .csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                .antMatchers("/api/v1/user/agree").permitAll()
-                .antMatchers("/api/v1/user/deny").authenticated()
-                .antMatchers("/**").authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasRole("USER")
                 .anyRequest().permitAll()
                 .and()
-                .formLogin().disable();
+                .addFilterBefore(new JwtFilter(tokenprovider),
+                        UsernamePasswordAuthenticationFilter.class);
     }
 }
