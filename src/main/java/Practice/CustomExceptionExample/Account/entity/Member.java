@@ -1,5 +1,6 @@
 package Practice.CustomExceptionExample.Account.entity;
 
+import Practice.CustomExceptionExample.Account.util.roleLevel;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,6 +35,14 @@ public class Member implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private roleLevel level;
+
+    public String getLevel(){
+        return  this.level.getLevel();
+    }
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
